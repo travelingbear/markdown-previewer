@@ -32,7 +32,7 @@ A VSCode extension that provides enhanced markdown preview functionality with Gi
 - **Animated GIFs**: Full support for animated GIF rendering with proper animation
 - **Local & Remote**: Support for both local files and remote URLs
 - **All Formats**: GIF, PNG, JPG, JPEG, SVG, WebP with responsive sizing
-- **Theme Compatible**: Images display beautifully in both light and dark themes
+- **Theme Compatible**: Images display in both light and dark themes
 
 ### 🖱️ **Intuitive Context Menus**
 - **Right-click in Preview**:
