@@ -14,11 +14,10 @@ let isModeSwitching = false;
 export function activate(context: vscode.ExtensionContext) {
     console.log('Markdown Previewer extension is activating...');
     
-    // Initialize status bar
+    // Initialize status bar (hidden by default)
     statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 1000);
     statusBarItem.command = 'markdownPreviewer.toggleMode';
     updateStatusBar();
-    statusBarItem.show();
     
     // Load settings
     const config = vscode.workspace.getConfiguration('markdownPreviewer');
@@ -36,6 +35,7 @@ export function activate(context: vscode.ExtensionContext) {
     // Auto-preview handler
     const handleFileOpening = (editor: vscode.TextEditor | undefined) => {
         if (editor?.document.languageId === 'markdown') {
+            statusBarItem.show();
             const modeText = currentMode === 'preview-first' ? 'Preview First' : 'Code First';
             vscode.window.setStatusBarMessage(`📝 Markdown Mode: ${modeText}`, 3000);
             
@@ -44,10 +44,18 @@ export function activate(context: vscode.ExtensionContext) {
                     openPreview(editor.document);
                 }, 200);
             }
+        } else if (!currentPanel) {
+            // Only hide if no preview is open
+            statusBarItem.hide();
         }
     };
 
-    handleFileOpening(vscode.window.activeTextEditor);
+    // Check current editor on activation
+    const activeEditor = vscode.window.activeTextEditor;
+    if (activeEditor?.document.languageId === 'markdown') {
+        statusBarItem.show();
+    }
+    handleFileOpening(activeEditor);
     const editorChangeListener = vscode.window.onDidChangeActiveTextEditor(handleFileOpening);
 
     const openPreviewCommand = vscode.commands.registerCommand('markdownPreviewer.openPreview', () => {
@@ -189,10 +197,19 @@ function openPreview(document: vscode.TextDocument) {
             editorScrollListener.dispose();
             editorScrollListener = undefined;
         }
+        
+        // Ensure status bar stays visible if markdown file is still active
+        const activeEditor = vscode.window.activeTextEditor;
+        if (activeEditor?.document.languageId === 'markdown') {
+            statusBarItem.show();
+        }
     });
 
     currentDocument = document;
     updatePreviewContent(currentPanel, document);
+    
+    // Ensure status bar stays visible when preview opens
+    statusBarItem.show();
 }
 
 function updatePreviewContent(panel: vscode.WebviewPanel, document: vscode.TextDocument) {

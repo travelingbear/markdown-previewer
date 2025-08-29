@@ -2,6 +2,18 @@
 
 All notable changes to the Markdown Previewer extension will be documented in this file.
 
+## [1.1.4] - 2024-12-19
+
+### 🔧 Bug Fixes
+- **Status Bar Visibility**: Fixed status bar disappearing when switching to preview mode
+  - Status bar now remains visible throughout markdown workflow
+  - Only hides when switching to non-markdown files (and no preview is active)
+  - Improved user experience with consistent mode indicator visibility
+
+### 📝 Technical Notes
+- Enhanced editor change handler to preserve status bar during preview mode
+- Better handling of active editor context changes
+
 ## [1.1.3] - 2024-12-19
 
 ### ✨ New Features

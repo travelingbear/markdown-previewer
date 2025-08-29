@@ -2,9 +2,9 @@
 
 A VSCode extension that provides enhanced markdown preview functionality with GitHub-style rendering, auto-preview capabilities, and intuitive mode switching.
 
-**Latest Update**: Version 1.1.3 adds full GIF support with animated rendering and save-from-preview functionality.
-
 ![vscode](vscode_extension.gif)
+
+**Latest Update**: Version 1.1.4 adds full GIF support, save-from-preview functionality, and improved status bar behavior.
 
 ## ✨ Features
 
