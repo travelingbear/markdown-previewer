@@ -8,7 +8,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.PreviewManager = void 0;
 const vscode = require("vscode");
 const themeManager_1 = require("./themeManager");
-const markdownIt = require('markdown-it');
 /**
  * Manages markdown preview functionality including:
  * - Webview panel creation and management
@@ -22,11 +21,16 @@ class PreviewManager {
      * Sets up HTML rendering, link detection, and typography
      */
     constructor() {
-        this.md = new markdownIt({
+        const MarkdownIt = require('markdown-it');
+        const taskLists = require('markdown-it-task-lists');
+        const mermaid = require('markdown-it-mermaid');
+        this.md = new MarkdownIt({
             html: true,
             linkify: true,
             typographer: true
-        });
+        })
+            .use(taskLists, { enabled: true })
+            .use(mermaid);
         this.themeManager = themeManager_1.ThemeManager.getInstance();
         this.setupThemeListener();
     }
@@ -155,12 +159,26 @@ class PreviewManager {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Markdown Preview</title>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
     <style>
         ${themeCSS}
+        /* Checkbox styling */
+        .task-list-item {
+            list-style-type: none;
+        }
+        .task-list-item-checkbox {
+            margin-right: 8px;
+        }
     </style>
 </head>
 <body>
     ${htmlContent}
+    <script>
+        mermaid.initialize({ 
+            startOnLoad: true,
+            theme: '${currentTheme === 'dark' ? 'dark' : 'default'}'
+        });
+    </script>
 </body>
 </html>`;
     }
