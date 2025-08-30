@@ -36,7 +36,13 @@ code --install-extension markdown-previewer-enhanced.vsix
 3. **Try the checkboxes** - Click any `- [ ]` checkbox in preview to see it update the source
 4. **Test position sync** - Scroll in preview, then toggle to code view to see position sync
 
-### Test New Features (v1.1.0)
+### Test New Features (v1.1.5)
+1. **Keyboard Shortcut**:
+   - Press **Alt+M** (Windows/Linux) or **Option+M** (Mac) to toggle modes
+   - Works when focused in code editor or preview panel
+   - Should switch between Preview ↔ Code seamlessly
+
+### Test Previous Features (v1.1.0)
 1. **Position Sync**: 
    - Scroll in preview → editor should follow
    - Scroll in editor → preview should follow
@@ -83,7 +89,7 @@ Access settings via `Cmd+,` (Mac) or `Ctrl+,` (Windows/Linux), then search for "
 
 If you encounter issues:
 
-1. **Check the version**: Ensure you have v1.1.0 with all latest features
+1. **Check the version**: Ensure you have v1.1.5 with all latest features
 2. **Reload VSCode**: Often resolves temporary issues
 3. **Check settings**: Verify configuration in VSCode settings
 4. **Test with simple file**: Try with a basic markdown file first
@@ -92,6 +98,7 @@ If you encounter issues:
 
 Once installed, explore these features:
 
+- **Keyboard Shortcuts**: Press Alt+M / Option+M for instant mode switching
 - **Interactive Checkboxes**: Click checkboxes in preview to update source
 - **Mermaid Diagrams**: Add flowcharts and diagrams with ```mermaid blocks
 - **Theme Switching**: Right-click in preview to toggle light/dark themes

@@ -165,7 +165,7 @@ function openPreview(document: vscode.TextDocument) {
         }
     );
 
-    // Handle messages from webview (checkbox updates, scroll sync, and save)
+    // Handle messages from webview (checkbox updates, scroll sync, save, and toggle mode)
     currentPanel.webview.onDidReceiveMessage(
         message => {
             if (message.type === 'checkboxToggle' && currentDocument) {
@@ -175,6 +175,8 @@ function openPreview(document: vscode.TextDocument) {
                 syncEditorToPreview(message.line);
             } else if (message.type === 'saveDocument' && currentDocument) {
                 vscode.workspace.saveAll();
+            } else if (message.type === 'toggleMode') {
+                vscode.commands.executeCommand('markdownPreviewer.toggleMode');
             }
         }
     );
@@ -396,6 +398,9 @@ function getWebviewContent(htmlContent: string, lineMap: number[]): string {
             if ((e.ctrlKey || e.metaKey) && e.key === 's') {
                 e.preventDefault();
                 vscode.postMessage({ type: 'saveDocument' });
+            } else if (e.altKey && e.key === 'm') {
+                e.preventDefault();
+                vscode.postMessage({ type: 'toggleMode' });
             }
         });
         

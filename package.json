@@ -2,7 +2,7 @@
   "name": "markdown-previewer",
   "displayName": "Markdown Previewer",
   "description": "Enhanced markdown preview with GitHub styling and auto-preview functionality",
-  "version": "1.1.4",
+  "version": "1.1.5",
   "publisher": "franciscofernandes",
   "author": {
     "name": "Francisco Fernandes"
@@ -89,6 +89,14 @@
         }
       ]
     },
+    "keybindings": [
+      {
+        "command": "markdownPreviewer.toggleMode",
+        "key": "alt+m",
+        "mac": "alt+m",
+        "when": "editorLangId == markdown || webviewId == markdownPreview"
+      }
+    ],
     "configuration": {
       "title": "Markdown Previewer",
       "properties": {

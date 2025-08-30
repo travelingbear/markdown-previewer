@@ -4,7 +4,7 @@ A VSCode extension that provides enhanced markdown preview functionality with Gi
 
 ![vscode](vscode_extension.gif)
 
-**Latest Update**: Version 1.1.4 adds full GIF support, save-from-preview functionality, and improved status bar behavior.
+**Latest Update**: Version 1.1.5 adds keyboard shortcut support (Alt+M / Option+M) for seamless mode switching.
 
 ## ✨ Features
 
@@ -42,11 +42,12 @@ A VSCode extension that provides enhanced markdown preview functionality with Gi
   - Toggle Mode (Preview ↔ Code)
   - Open Preview
 
-### ⌨️ **Command Palette Integration**
-All functions accessible via `Cmd+Shift+P` (Mac) / `Ctrl+Shift+P` (Windows):
-- "Markdown Previewer: Open Preview"
-- "Markdown Previewer: Toggle Mode (Preview ↔ Code)"
-- "Markdown Previewer: Toggle Theme (Light/Dark)"
+### ⌨️ **Keyboard Shortcuts & Commands**
+- **Alt+M / Option+M**: Quick toggle between Preview ↔ Code modes
+- **Command Palette** via `Cmd+Shift+P` (Mac) / `Ctrl+Shift+P` (Windows):
+  - "Markdown Previewer: Open Preview"
+  - "Markdown Previewer: Toggle Mode (Preview ↔ Code)"
+  - "Markdown Previewer: Toggle Theme (Light/Dark)"
 
 ## 🛠️ Installation & Usage
 
@@ -62,7 +63,8 @@ All functions accessible via `Cmd+Shift+P` (Mac) / `Ctrl+Shift+P` (Windows):
 2. **Right-click for options**:
    - In preview: Toggle to code view or switch themes
    - In editor: Toggle to preview or open preview panel
-3. **Use Command Palette**: `Cmd+Shift+P` → "Markdown Previewer" commands
+3. **Use keyboard shortcuts**: Press **Alt+M** (Windows/Linux) or **Option+M** (Mac) to toggle modes
+4. **Use Command Palette**: `Cmd+Shift+P` → "Markdown Previewer" commands
 
 ## 📁 Project Structure
 

@@ -2,6 +2,24 @@
 
 All notable changes to the Markdown Previewer extension will be documented in this file.
 
+## [1.1.5] - 2024-12-19
+
+### ✨ New Features
+- **Keyboard Shortcut**: Added Alt+M / Option+M shortcut for quick mode switching
+  - Works in both code editor and preview panels
+  - Focus-based activation (click in target panel first)
+  - Seamless toggle between Preview ↔ Code modes
+  - Follows VSCode keyboard shortcut conventions
+
+### 🔧 Technical Improvements
+- **Enhanced Webview Integration**: Added keyboard event handling in preview panel
+- **Message Passing**: Improved communication between webview and extension
+- **Keybinding Configuration**: Added proper VSCode keybinding registration
+
+### 📝 Configuration
+- Added keybinding: `alt+m` (Windows/Linux) and `alt+m` (Mac)
+- Contextual activation: only works with markdown files and preview panels
+
 ## [1.1.4] - 2024-12-19
 
 ### 🔧 Bug Fixes
