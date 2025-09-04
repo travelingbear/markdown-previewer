@@ -2,6 +2,30 @@
 
 All notable changes to the Markdown Previewer extension will be documented in this file.
 
+## [1.1.6] - 2024-12-19
+
+### ✨ New Features
+- **Syntax Highlighting**: Added comprehensive code syntax highlighting support
+  - Integrated highlight.js for colorful code block rendering
+  - Theme-aware highlighting (GitHub light/dark styles)
+  - Support for JavaScript, TypeScript, Python, and 50+ languages
+  - Automatic language detection and highlighting
+
+### 🔧 Technical Improvements
+- **Enhanced Mermaid Support**: Improved Mermaid diagram configuration and compatibility
+  - Better initialization with proper theme integration
+  - Enhanced flowchart, sequence, and Gantt chart rendering
+  - Fixed diagram parsing issues with updated syntax
+- **Webview Enhancements**: Added CDN integration for highlight.js
+  - Dynamic theme switching for code highlighting
+  - Improved markdown-it configuration with highlight function
+  - Better error handling for unsupported diagram types
+
+### 📝 Testing
+- Added comprehensive test files for validation
+- Fixed Mermaid diagram syntax compatibility
+- Enhanced code block testing across multiple languages
+
 ## [1.1.5] - 2024-12-19
 
 ### ✨ New Features
