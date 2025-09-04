@@ -233,10 +233,20 @@ function updatePreviewContent(panel: vscode.WebviewPanel, document: vscode.TextD
 function convertMarkdownToHtml(markdown: string): { html: string; lineMap: number[] } {
     try {
         const MarkdownIt = require('markdown-it');
+        const hljs = require('highlight.js');
+        
         const md = new MarkdownIt({
             html: true,
             linkify: true,
-            typographer: true
+            typographer: true,
+            highlight: function (str: string, lang: string) {
+                if (lang && hljs.getLanguage(lang)) {
+                    try {
+                        return hljs.highlight(str, { language: lang }).value;
+                    } catch (__) {}
+                }
+                return '';
+            }
         });
         
         // Try to load and use plugins safely
@@ -327,6 +337,8 @@ function getWebviewContent(htmlContent: string, lineMap: number[]): string {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Markdown Preview</title>
     <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/${currentTheme === 'dark' ? 'github-dark' : 'github'}.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
     <style>
         ${themeCSS}
         .task-list-item {
@@ -343,10 +355,23 @@ function getWebviewContent(htmlContent: string, lineMap: number[]): string {
     <script>
         const vscode = acquireVsCodeApi();
         
-        // Initialize Mermaid
+        // Initialize syntax highlighting
+        hljs.highlightAll();
+        
+        // Initialize Mermaid with better config
         mermaid.initialize({ 
             startOnLoad: true,
-            theme: '${currentTheme === 'dark' ? 'dark' : 'default'}'
+            theme: '${currentTheme === 'dark' ? 'dark' : 'default'}',
+            flowchart: {
+                useMaxWidth: true,
+                htmlLabels: true
+            },
+            sequence: {
+                useMaxWidth: true
+            },
+            gantt: {
+                useMaxWidth: true
+            }
         });
         
         // Handle checkbox clicks
