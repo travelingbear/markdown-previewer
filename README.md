@@ -4,7 +4,7 @@ A VSCode extension that provides enhanced markdown preview functionality with Gi
 
 ![vscode](vscode_extension.gif)
 
-**Latest Update**: Version 1.1.5 adds keyboard shortcut support (Alt+M / Option+M) for seamless mode switching.
+**Latest Update**: Version 1.2.0 adds one-click copy buttons to all code blocks for enhanced developer productivity.
 
 ## ✨ Features
 
@@ -15,6 +15,7 @@ A VSCode extension that provides enhanced markdown preview functionality with Gi
 - **Seamless Mode Switching**: Toggle between preview ↔ code in the same panel
 
 ### ✅ **Interactive Elements**
+- **Copy Code Buttons**: One-click copy functionality on all code blocks with visual feedback
 - **Live Checkboxes**: Click checkboxes in preview to update source markdown automatically
 - **Save from Preview**: Press Ctrl+S (Cmd+S on Mac) to save directly from preview mode
 - **Mermaid.js Diagrams**: Full support for flowcharts, sequence diagrams, and more
@@ -60,11 +61,12 @@ A VSCode extension that provides enhanced markdown preview functionality with Gi
 
 ### Using the Extension
 1. **Open a markdown file** - It will automatically open in preview mode (if "Preview First" is set)
-2. **Right-click for options**:
+2. **Copy code easily**: Hover over any code block and click the "Copy" button that appears
+3. **Right-click for options**:
    - In preview: Toggle to code view or switch themes
    - In editor: Toggle to preview or open preview panel
-3. **Use keyboard shortcuts**: Press **Alt+M** (Windows/Linux) or **Option+M** (Mac) to toggle modes
-4. **Use Command Palette**: `Cmd+Shift+P` → "Markdown Previewer" commands
+4. **Use keyboard shortcuts**: Press **Alt+M** (Windows/Linux) or **Option+M** (Mac) to toggle modes
+5. **Use Command Palette**: `Cmd+Shift+P` → "Markdown Previewer" commands
 
 ## 📁 Project Structure
 

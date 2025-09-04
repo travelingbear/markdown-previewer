@@ -2,6 +2,27 @@
 
 All notable changes to the Markdown Previewer extension will be documented in this file.
 
+## [1.2.0] - 2024-12-19
+
+### ✨ New Features
+- **Copy Code Buttons**: Added one-click copy functionality to all code blocks
+  - Hover over any code block to reveal copy button in top-left corner
+  - Click to copy code to clipboard with visual feedback
+  - Button shows "Copied!" confirmation for 2 seconds
+  - Theme-aware styling that adapts to light/dark modes
+  - Works with all programming languages and code blocks
+
+### 🎨 User Experience Improvements
+- **Enhanced Code Block Interaction**: Improved usability for developers
+  - Smooth hover animations and transitions
+  - Intuitive positioning and visual feedback
+  - Seamless integration with existing syntax highlighting
+
+### 🔧 Technical Enhancements
+- **Modern Clipboard API**: Uses navigator.clipboard.writeText() for reliable copying
+- **Dynamic DOM Manipulation**: Automatically wraps code blocks with copy functionality
+- **Cross-browser Compatibility**: Works in all modern browsers within VSCode webview
+
 ## [1.1.6] - 2024-12-19
 
 ### ✨ New Features

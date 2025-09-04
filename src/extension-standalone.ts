@@ -348,6 +348,39 @@ function getWebviewContent(htmlContent: string, lineMap: number[]): string {
             margin-right: 8px;
             cursor: pointer;
         }
+        
+        .code-block-container {
+            position: relative;
+        }
+        
+        .copy-button {
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            background: ${currentTheme === 'dark' ? '#44475a' : '#f6f8fa'};
+            border: 1px solid ${currentTheme === 'dark' ? '#6272a4' : '#d0d7de'};
+            color: ${currentTheme === 'dark' ? '#f8f8f2' : '#24292f'};
+            padding: 4px 8px;
+            font-size: 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+        
+        .code-block-container:hover .copy-button {
+            opacity: 1;
+        }
+        
+        .copy-button:hover {
+            background: ${currentTheme === 'dark' ? '#6272a4' : '#e1e4e8'};
+        }
+        
+        .copy-button.copied {
+            background: #28a745;
+            color: white;
+            border-color: #28a745;
+        }
     </style>
 </head>
 <body>
@@ -357,6 +390,31 @@ function getWebviewContent(htmlContent: string, lineMap: number[]): string {
         
         // Initialize syntax highlighting
         hljs.highlightAll();
+        
+        // Add copy buttons to code blocks
+        document.querySelectorAll('pre code').forEach((codeBlock, index) => {
+            const pre = codeBlock.parentElement;
+            const container = document.createElement('div');
+            container.className = 'code-block-container';
+            
+            const copyButton = document.createElement('button');
+            copyButton.className = 'copy-button';
+            copyButton.textContent = 'Copy';
+            copyButton.onclick = () => {
+                navigator.clipboard.writeText(codeBlock.textContent).then(() => {
+                    copyButton.textContent = 'Copied!';
+                    copyButton.classList.add('copied');
+                    setTimeout(() => {
+                        copyButton.textContent = 'Copy';
+                        copyButton.classList.remove('copied');
+                    }, 2000);
+                });
+            };
+            
+            pre.parentNode.insertBefore(container, pre);
+            container.appendChild(pre);
+            container.appendChild(copyButton);
+        });
         
         // Initialize Mermaid with better config
         mermaid.initialize({ 
