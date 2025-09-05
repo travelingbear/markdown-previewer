@@ -40,7 +40,8 @@
     "onLanguage:markdown",
     "onCommand:markdownPreviewer.openPreview",
     "onCommand:markdownPreviewer.toggleTheme",
-    "onCommand:markdownPreviewer.toggleMode"
+    "onCommand:markdownPreviewer.toggleMode",
+    "onCommand:markdownPreviewer.print"
   ],
   "main": "./dist/extension-standalone.js",
   "contributes": {
@@ -61,6 +62,12 @@
         "title": "Toggle Mode (Preview ↔ Code)",
         "category": "Markdown Previewer",
         "icon": "$(arrow-swap)"
+      },
+      {
+        "command": "markdownPreviewer.print",
+        "title": "Print Preview",
+        "category": "Markdown Previewer",
+        "icon": "$(print)"
       }
     ],
     "menus": {
@@ -86,6 +93,11 @@
           "command": "markdownPreviewer.toggleTheme",
           "when": "webviewId == markdownPreview",
           "group": "markdown@2"
+        },
+        {
+          "command": "markdownPreviewer.print",
+          "when": "webviewId == markdownPreview",
+          "group": "markdown@3"
         }
       ]
     },
