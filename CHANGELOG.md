@@ -2,6 +2,13 @@
 
 All notable changes to the Markdown Previewer extension will be documented in this file.
 
+## [1.3.0] - 2024-12-19
+
+### 🔧 Maintenance
+- **Version Update**: Bumped version to 1.3.0 for marketplace release
+- **Package Optimization**: Prepared for VSCode Marketplace publication
+- **Documentation Updates**: Updated version references across all files
+
 ## [1.2.0] - 2024-12-19
 
 ### ✨ New Features

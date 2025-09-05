@@ -4,7 +4,7 @@ A VSCode extension that provides enhanced markdown preview functionality with Gi
 
 ![vscode](vscode_extension.gif)
 
-**Latest Update**: Version 1.2.0 adds one-click copy buttons to all code blocks for enhanced developer productivity.
+**Latest Update**: Version 1.3.0 includes browser-based print functionality and one-click copy buttons for enhanced developer productivity.
 
 ## ✨ Features
 
