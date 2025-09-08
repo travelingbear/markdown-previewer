@@ -4,7 +4,7 @@ A VSCode extension that provides enhanced markdown preview functionality with Gi
 
 ![vscode](vscode_extension.gif)
 
-**Latest Update**: Version 1.3.1 adds browser-based print functionality while maintaining all copy button features from v1.2.0.
+**Latest Update**: Version 1.4.0 adds interactive text input fields using `Label = ___` syntax, expanding the extension's form capabilities beyond checkboxes.
 
 ## ✨ Features
 
@@ -18,6 +18,7 @@ A VSCode extension that provides enhanced markdown preview functionality with Gi
 - **Copy Code Buttons**: One-click copy functionality on all code blocks with visual feedback
 - **Print Support**: Browser-based printing with color syntax highlighting and optimized layout
 - **Live Checkboxes**: Click checkboxes in preview to update source markdown automatically
+- **Text Input Fields**: Interactive text inputs using `Label = ___` syntax with real-time updates
 - **Save from Preview**: Press Ctrl+S (Cmd+S on Mac) to save directly from preview mode
 - **Mermaid.js Diagrams**: Full support for flowcharts, sequence diagrams, and more
 - **GIF Support**: Full animated GIF rendering for both local and remote images
@@ -65,11 +66,12 @@ A VSCode extension that provides enhanced markdown preview functionality with Gi
 ### Using the Extension
 1. **Open a markdown file** - It will automatically open in preview mode (if "Preview First" is set)
 2. **Copy code easily**: Hover over any code block and click the "Copy" button that appears
-3. **Right-click for options**:
+3. **Add text inputs**: Use `Label = ___` syntax to create interactive text input fields
+4. **Right-click for options**:
    - In preview: Toggle to code view or switch themes
    - In editor: Toggle to preview or open preview panel
-4. **Use keyboard shortcuts**: Press **Alt+M** (Windows/Linux) or **Option+M** (Mac) to toggle modes
-5. **Use Command Palette**: `Cmd+Shift+P` → "Markdown Previewer" commands
+5. **Use keyboard shortcuts**: Press **Alt+M** (Windows/Linux) or **Option+M** (Mac) to toggle modes
+6. **Use Command Palette**: `Cmd+Shift+P` → "Markdown Previewer" commands
 
 ## 📁 Project Structure
 

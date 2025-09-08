@@ -2,6 +2,27 @@
 
 All notable changes to the Markdown Previewer extension will be documented in this file.
 
+## [1.4.0] - 2024-12-19
+
+### ✨ New Features
+- **Interactive Text Input Fields**: Added support for text inputs using `Label = ___` syntax
+  - Type `Name = ___` in markdown to create interactive text input field
+  - Real-time input value synchronization between preview and extension
+  - Themed input styling for both light and dark modes
+  - Input field focus states with proper accessibility
+  - Placeholder text automatically generated from label
+
+### 🎨 Enhanced Form Capabilities
+- **Extended Interactive Elements**: Beyond checkboxes to include text inputs
+  - Improved form capabilities for markdown documents
+  - Better user experience for data collection in markdown
+  - Consistent styling with existing interactive elements
+
+### 🔧 Technical Improvements
+- **Input Event Handling**: Added input change detection and message passing
+- **Dynamic HTML Generation**: Automatic conversion of text input syntax to HTML
+- **State Management**: Input values maintained during theme switches and mode changes
+
 ## [1.3.1] - 2024-12-19
 
 ### ✨ New Features

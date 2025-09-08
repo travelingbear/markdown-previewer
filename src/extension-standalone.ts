@@ -203,11 +203,13 @@ function openPreview(document: vscode.TextDocument) {
         }
     );
 
-    // Handle messages from webview (checkbox updates, scroll sync, save, toggle mode, and print)
+    // Handle messages from webview (checkbox updates, text input updates, scroll sync, save, toggle mode, and print)
     currentPanel.webview.onDidReceiveMessage(
         message => {
             if (message.type === 'checkboxToggle' && currentDocument) {
                 toggleCheckboxInDocument(currentDocument, message.line, message.checked);
+            } else if (message.type === 'updateTextInMarkdown' && currentDocument) {
+                updateTextInMarkdown(currentDocument, message.label, message.value);
             } else if (message.type === 'previewScroll' && currentDocument && scrollSyncEnabled && !isModeSwitching) {
                 lastPreviewLine = message.line;
                 syncEditorToPreview(message.line);
@@ -326,6 +328,18 @@ function convertMarkdownToHtml(markdown: string): { html: string; lineMap: numbe
         
         let html = md.render(markdown);
         
+        // Convert text input syntax to HTML inputs
+        html = html.replace(/([\w\s]+)\s*=\s*___+/g, (match: string, label: string) => {
+            const inputId = `input_${Math.random().toString(36).substr(2, 9)}`;
+            return `<div class="text-input-container">
+                <label for="${inputId}" class="text-input-label">${label.trim()}:</label>
+                <div class="input-row">
+                    <textarea id="${inputId}" class="text-input" placeholder="Enter ${label.trim().toLowerCase()}..." rows="1"></textarea>
+                    <button class="update-button" onclick="updateMarkdown('${inputId}', '${label.trim()}')">Save</button>
+                </div>
+            </div>`;
+        });
+        
         // Convert local image paths to webview URIs for GIF support
         if (currentPanel && currentDocument) {
             const documentDir = vscode.Uri.file(currentDocument.uri.fsPath).with({ path: currentDocument.uri.path.substring(0, currentDocument.uri.path.lastIndexOf('/')) });
@@ -421,6 +435,70 @@ function getWebviewContent(htmlContent: string, lineMap: number[]): string {
             color: white;
             border-color: #28a745;
         }
+        
+        .text-input-container {
+            margin: 16px 0;
+            padding: 12px;
+            border: 1px solid ${currentTheme === 'dark' ? '#44475a' : '#d0d7de'};
+            border-radius: 6px;
+            background: ${currentTheme === 'dark' ? '#21222c' : '#f6f8fa'};
+        }
+        
+        .text-input-label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: ${currentTheme === 'dark' ? '#f8f8f2' : '#24292f'};
+        }
+        
+        .text-input {
+            flex: 1;
+            min-width: 150px;
+            padding: 8px 12px;
+            border: 1px solid ${currentTheme === 'dark' ? '#6272a4' : '#d0d7de'};
+            border-radius: 4px;
+            background: ${currentTheme === 'dark' ? '#282a36' : '#ffffff'};
+            color: ${currentTheme === 'dark' ? '#f8f8f2' : '#24292f'};
+            font-size: 14px;
+            font-family: inherit;
+            resize: both;
+            white-space: pre-wrap;
+            overflow-wrap: break-word;
+        }
+        
+        .input-row {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: flex-start;
+            gap: 8px;
+        }
+        
+        .update-button {
+            width: 70px;
+            padding: 8px 12px;
+            border: 1px solid ${currentTheme === 'dark' ? '#6272a4' : '#0969da'};
+            border-radius: 4px;
+            background: ${currentTheme === 'dark' ? '#6272a4' : '#0969da'};
+            color: white;
+            font-size: 12px;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+        
+        .update-button:hover {
+            background: ${currentTheme === 'dark' ? '#bd93f9' : '#0550ae'};
+        }
+        
+        .update-button.saved {
+            background: #28a745;
+            border-color: #28a745;
+        }
+        
+        .text-input:focus {
+            outline: none;
+            border-color: ${currentTheme === 'dark' ? '#bd93f9' : '#0969da'};
+            box-shadow: 0 0 0 2px ${currentTheme === 'dark' ? 'rgba(189, 147, 249, 0.3)' : 'rgba(9, 105, 218, 0.3)'};
+        }
     </style>
 </head>
 <body>
@@ -472,7 +550,7 @@ function getWebviewContent(htmlContent: string, lineMap: number[]): string {
             }
         });
         
-        // Handle checkbox clicks
+        // Handle checkbox clicks and text input changes
         document.addEventListener('change', function(e) {
             if (e.target && e.target.type === 'checkbox' && e.target.classList.contains('task-list-item-checkbox')) {
                 const listItem = e.target.closest('.task-list-item');
@@ -488,6 +566,26 @@ function getWebviewContent(htmlContent: string, lineMap: number[]): string {
                 }
             }
         });
+        
+        // Handle text input updates
+        window.updateMarkdown = function(inputId, label) {
+            const input = document.getElementById(inputId);
+            const button = input.nextElementSibling;
+            if (input && input.value.trim()) {
+                vscode.postMessage({
+                    type: 'updateTextInMarkdown',
+                    label: label,
+                    value: input.value
+                });
+                
+                button.textContent = 'Saved!';
+                button.classList.add('saved');
+                setTimeout(() => {
+                    button.textContent = 'Save';
+                    button.classList.remove('saved');
+                }, 2000);
+            }
+        };
         
         // Handle scroll sync
         let scrollTimeout;
@@ -527,7 +625,7 @@ function getWebviewContent(htmlContent: string, lineMap: number[]): string {
             }
         });
         
-        // Handle scroll-to-line messages from extension
+        // Handle messages from extension
         window.addEventListener('message', event => {
             const message = event.data;
             if (message.type === 'scrollToLine') {
@@ -544,6 +642,11 @@ function getWebviewContent(htmlContent: string, lineMap: number[]): string {
                 
                 if (targetElement) {
                     targetElement.scrollIntoView({ behavior: 'auto', block: 'start' });
+                }
+            } else if (message.type === 'updateInputValue') {
+                const input = document.getElementById(message.inputId);
+                if (input) {
+                    input.value = message.value;
                 }
             }
         });
@@ -734,6 +837,22 @@ function toggleCheckboxInDocument(document: vscode.TextDocument, lineIndex: numb
         }
     }
     
+    vscode.workspace.applyEdit(edit);
+}
+
+function updateTextInMarkdown(document: vscode.TextDocument, label: string, value: string) {
+    const edit = new vscode.WorkspaceEdit();
+    const text = document.getText();
+    const searchPattern = new RegExp(`${label.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\s*=\\s*___+`, 'g');
+    const replacement = `${label} = ${value}`;
+    
+    const newText = text.replace(searchPattern, replacement);
+    const fullRange = new vscode.Range(
+        new vscode.Position(0, 0),
+        new vscode.Position(document.lineCount, 0)
+    );
+    
+    edit.replace(document.uri, fullRange, newText);
     vscode.workspace.applyEdit(edit);
 }
 
