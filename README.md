@@ -4,7 +4,7 @@ A VSCode extension that provides enhanced markdown preview functionality with Gi
 
 ![vscode](vscode_extension.gif)
 
-**Latest Update**: Version 1.4.0 adds interactive text input fields using `Label = ___` syntax, expanding the extension's form capabilities beyond checkboxes.
+**Latest Update**: Version 1.4.1 fixes local image rendering and mermaid diagram compatibility, plus adds interactive text input fields using `Label = ___` syntax.
 
 ## ✨ Features
 

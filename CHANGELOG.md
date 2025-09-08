@@ -2,6 +2,23 @@
 
 All notable changes to the Markdown Previewer extension will be documented in this file.
 
+## [1.4.1] - 2024-12-19
+
+### 🐛 Bug Fixes
+- **Local Image Rendering**: Fixed local image paths not displaying in preview mode
+  - Corrected path resolution using fsPath instead of uri.path
+  - Added support for relative paths starting with './'
+  - Local images now render properly alongside remote images
+- **Mermaid Diagram Compatibility**: Fixed mermaid.js parsing errors
+  - Downgraded to mermaid v9.4.3 for stable diagram support
+  - Use `graph TD` syntax instead of `flowchart TD` for flowcharts
+  - Simplified class diagram syntax for better compatibility
+  - All basic diagram types now render correctly
+
+### 📝 Documentation
+- Added test files for local images and mermaid diagrams
+- Updated syntax examples for mermaid compatibility
+
 ## [1.4.0] - 2024-12-19
 
 ### ✨ New Features
