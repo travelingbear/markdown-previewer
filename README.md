@@ -4,7 +4,7 @@ A VSCode extension that provides enhanced markdown preview functionality with Gi
 
 ![vscode](vscode_extension.gif)
 
-**Latest Update**: Version 1.3.0 includes browser-based print functionality and one-click copy buttons for enhanced developer productivity.
+**Latest Update**: Version 1.3.1 adds browser-based print functionality while maintaining all copy button features from v1.2.0.
 
 ## ✨ Features
 
@@ -16,7 +16,7 @@ A VSCode extension that provides enhanced markdown preview functionality with Gi
 
 ### ✅ **Interactive Elements**
 - **Copy Code Buttons**: One-click copy functionality on all code blocks with visual feedback
-- **Print Support**: Well-formatted printing with optimized layout and typography
+- **Print Support**: Browser-based printing with color syntax highlighting and optimized layout
 - **Live Checkboxes**: Click checkboxes in preview to update source markdown automatically
 - **Save from Preview**: Press Ctrl+S (Cmd+S on Mac) to save directly from preview mode
 - **Mermaid.js Diagrams**: Full support for flowcharts, sequence diagrams, and more
@@ -40,7 +40,7 @@ A VSCode extension that provides enhanced markdown preview functionality with Gi
 - **Right-click in Preview**:
   - Toggle Mode (Preview ↔ Code)
   - Toggle Theme (Light/Dark)
-  - Print Preview
+  - Print Document
 - **Right-click in Markdown Editor**:
   - Toggle Mode (Preview ↔ Code)
   - Open Preview
@@ -51,7 +51,7 @@ A VSCode extension that provides enhanced markdown preview functionality with Gi
   - "Markdown Previewer: Open Preview"
   - "Markdown Previewer: Toggle Mode (Preview ↔ Code)"
   - "Markdown Previewer: Toggle Theme (Light/Dark)"
-  - "Markdown Previewer: Print Preview"
+  - "Markdown Previewer: Print"
 
 ## 🛠️ Installation & Usage
 
@@ -66,7 +66,7 @@ A VSCode extension that provides enhanced markdown preview functionality with Gi
 1. **Open a markdown file** - It will automatically open in preview mode (if "Preview First" is set)
 2. **Copy code easily**: Hover over any code block and click the "Copy" button that appears
 3. **Right-click for options**:
-   - In preview: Toggle to code view, switch themes, or print
+   - In preview: Toggle to code view or switch themes
    - In editor: Toggle to preview or open preview panel
 4. **Use keyboard shortcuts**: Press **Alt+M** (Windows/Linux) or **Option+M** (Mac) to toggle modes
 5. **Use Command Palette**: `Cmd+Shift+P` → "Markdown Previewer" commands

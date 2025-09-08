@@ -87,7 +87,6 @@ export function activate(context: vscode.ExtensionContext) {
             const { html: htmlContent } = convertMarkdownToHtml(markdownContent);
             const printHtml = getPrintableHtml(htmlContent);
             
-            // Create temporary HTML file
             const os = require('os');
             const path = require('path');
             const fs = require('fs');
@@ -98,19 +97,15 @@ export function activate(context: vscode.ExtensionContext) {
             
             fs.writeFileSync(tempFilePath, printHtml);
             
-            // Open in browser
             const fileUri = vscode.Uri.file(tempFilePath);
             await vscode.env.openExternal(fileUri);
             
             vscode.window.showInformationMessage('Print page opened in browser. You can now print using Cmd+P or Ctrl+P.');
             
-            // Clean up temp file after 30 seconds
             setTimeout(() => {
                 try {
                     fs.unlinkSync(tempFilePath);
-                } catch (e) {
-                    // Ignore cleanup errors
-                }
+                } catch (e) {}
             }, 30000);
             
         } catch (error) {
@@ -426,88 +421,6 @@ function getWebviewContent(htmlContent: string, lineMap: number[]): string {
             color: white;
             border-color: #28a745;
         }
-        
-        @media print {
-            body {
-                background-color: white !important;
-                color: black !important;
-                padding: 20px;
-                font-size: 12pt;
-                line-height: 1.4;
-            }
-            
-            h1, h2, h3, h4, h5, h6 {
-                color: black !important;
-                page-break-after: avoid;
-            }
-            
-            h1 { font-size: 18pt; }
-            h2 { font-size: 16pt; }
-            h3 { font-size: 14pt; }
-            h4 { font-size: 13pt; }
-            h5 { font-size: 12pt; }
-            h6 { font-size: 11pt; }
-            
-            p, li {
-                color: black !important;
-                orphans: 3;
-                widows: 3;
-            }
-            
-            blockquote {
-                background-color: #f8f9fa !important;
-                color: black !important;
-                border-left: 4px solid #dee2e6 !important;
-                page-break-inside: avoid;
-            }
-            
-            code {
-                background-color: #f8f9fa !important;
-                color: #d63384 !important;
-                border: 1px solid #dee2e6 !important;
-            }
-            
-            pre {
-                background-color: #f8f9fa !important;
-                color: black !important;
-                border: 1px solid #dee2e6 !important;
-                page-break-inside: avoid;
-            }
-            
-            pre code {
-                background-color: transparent !important;
-                color: black !important;
-                border: none !important;
-            }
-            
-            table {
-                border-collapse: collapse;
-                page-break-inside: avoid;
-            }
-            
-            table th, table td {
-                border: 1px solid #dee2e6 !important;
-                color: black !important;
-            }
-            
-            table th {
-                background-color: #f8f9fa !important;
-            }
-            
-            a {
-                color: #0066cc !important;
-                text-decoration: underline;
-            }
-            
-            .copy-button {
-                display: none !important;
-            }
-            
-            img {
-                max-width: 100%;
-                page-break-inside: avoid;
-            }
-        }
     </style>
 </head>
 <body>
@@ -614,7 +527,7 @@ function getWebviewContent(htmlContent: string, lineMap: number[]): string {
             }
         });
         
-        // Handle scroll-to-line and print messages from extension
+        // Handle scroll-to-line messages from extension
         window.addEventListener('message', event => {
             const message = event.data;
             if (message.type === 'scrollToLine') {
@@ -632,21 +545,165 @@ function getWebviewContent(htmlContent: string, lineMap: number[]): string {
                 if (targetElement) {
                     targetElement.scrollIntoView({ behavior: 'auto', block: 'start' });
                 }
-            } else if (message.type === 'print') {
-                // Show print instructions immediately since webview print is restricted
-                const instructions = document.createElement('div');
-                const isDark = '${currentTheme}' === 'dark';
-                const bgColor = isDark ? '#282a36' : '#ffffff';
-                const textColor = isDark ? '#f8f8f2' : '#24292f';
-                const borderColor = isDark ? '#6272a4' : '#d0d7de';
-                
-                instructions.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:' + bgColor + ';color:' + textColor + ';border:2px solid ' + borderColor + ';border-radius:8px;padding:20px;z-index:10000;font-family:sans-serif;box-shadow:0 4px 12px rgba(0,0,0,0.3);max-width:450px;text-align:center;';
-                
-                instructions.innerHTML = '<h3 style="margin-top:0;">How to Print</h3><p><strong>To print this markdown document:</strong></p><ol style="text-align:left;margin:15px 0;"><li>Press <strong>Cmd+P</strong> (Mac) or <strong>Ctrl+P</strong> (Windows/Linux) while this preview is focused</li><li>Or right-click anywhere → "Inspect Element" → use browser\'s print function</li><li>Or copy the content and paste into a document editor</li></ol><p style="font-size:12px;color:#666;">Note: VSCode webviews restrict direct printing for security reasons.</p><button onclick="this.parentElement.remove()" style="background:#0969da;color:white;border:none;padding:8px 16px;border-radius:4px;cursor:pointer;margin-top:10px;">Got it</button>';
-                
-                document.body.appendChild(instructions);
             }
         });
+    </script>
+</body>
+</html>`;
+}
+
+function getPrintableHtml(htmlContent: string): string {
+    return `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Markdown Print Preview</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif;
+            font-size: 16px;
+            line-height: 1.5;
+            color: #24292f;
+            background-color: #ffffff;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 32px;
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            margin-top: 24px;
+            margin-bottom: 16px;
+            font-weight: 600;
+            line-height: 1.25;
+            page-break-after: avoid;
+        }
+        
+        h1 { font-size: 2em; border-bottom: 1px solid #d0d7de; padding-bottom: 0.3em; }
+        h2 { font-size: 1.5em; border-bottom: 1px solid #d0d7de; padding-bottom: 0.3em; }
+        h3 { font-size: 1.25em; }
+        h4 { font-size: 1em; }
+        h5 { font-size: 0.875em; }
+        h6 { font-size: 0.85em; color: #656d76; }
+        
+        p { margin-top: 0; margin-bottom: 16px; orphans: 3; widows: 3; }
+        
+        blockquote {
+            padding: 0 1em;
+            color: #24292f;
+            border-left: 0.25em solid #d0d7de;
+            margin: 0 0 16px 0;
+            background-color: #f6f8fa;
+            page-break-inside: avoid;
+        }
+        
+        code {
+            padding: 0.2em 0.4em;
+            margin: 0;
+            font-size: 85%;
+            color: #24292f;
+            background-color: #f6f8fa;
+            border-radius: 6px;
+            font-family: ui-monospace, SFMono-Regular, 'SF Mono', Consolas, 'Liberation Mono', Menlo, monospace;
+        }
+        
+        pre {
+            padding: 16px;
+            overflow: auto;
+            font-size: 85%;
+            line-height: 1.45;
+            color: #24292f;
+            background-color: #f6f8fa;
+            border-radius: 6px;
+            margin-bottom: 16px;
+            border: 1px solid #d0d7de;
+            page-break-inside: avoid;
+        }
+        
+        pre code {
+            background-color: transparent;
+            border: 0;
+            padding: 0;
+            margin: 0;
+            font-size: 100%;
+        }
+        
+        ul, ol { padding-left: 2em; margin-top: 0; margin-bottom: 16px; }
+        li { margin-top: 0.25em; }
+        
+        table {
+            border-spacing: 0;
+            border-collapse: collapse;
+            margin-top: 0;
+            margin-bottom: 16px;
+            page-break-inside: avoid;
+        }
+        
+        table th, table td {
+            padding: 6px 13px;
+            border: 1px solid #d0d7de;
+        }
+        
+        table th {
+            font-weight: 600;
+            background-color: #f6f8fa;
+        }
+        
+        strong { font-weight: 600; }
+        em { font-style: italic; }
+        
+        a {
+            color: #0969da;
+            text-decoration: none;
+        }
+        
+        a:hover {
+            text-decoration: underline;
+        }
+        
+        hr {
+            height: 0.25em;
+            padding: 0;
+            margin: 24px 0;
+            background-color: #d0d7de;
+            border: 0;
+        }
+        
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 6px;
+            margin: 8px 0;
+            page-break-inside: avoid;
+        }
+        
+        @media print {
+            body {
+                font-size: 12pt;
+                line-height: 1.4;
+                padding: 20px;
+                -webkit-print-color-adjust: exact;
+                color-adjust: exact;
+            }
+            
+            h1 { font-size: 18pt; }
+            h2 { font-size: 16pt; }
+            h3 { font-size: 14pt; }
+            h4 { font-size: 13pt; }
+            h5 { font-size: 12pt; }
+            h6 { font-size: 11pt; }
+        }
+    </style>
+</head>
+<body>
+    ${htmlContent}
+    <script>
+        window.onload = function() {
+            setTimeout(() => {
+                window.print();
+            }, 1000);
+        };
     </script>
 </body>
 </html>`;
@@ -977,161 +1034,6 @@ function syncPreviewToEditor(line: number) {
         
         setTimeout(() => { scrollSyncEnabled = true; }, 300);
     }
-}
-
-function getPrintableHtml(htmlContent: string): string {
-    return `<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Markdown Print Preview</title>
-    <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif;
-            font-size: 16px;
-            line-height: 1.5;
-            color: #24292f;
-            background-color: #ffffff;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 32px;
-        }
-        
-        h1, h2, h3, h4, h5, h6 {
-            margin-top: 24px;
-            margin-bottom: 16px;
-            font-weight: 600;
-            line-height: 1.25;
-            page-break-after: avoid;
-        }
-        
-        h1 { font-size: 2em; border-bottom: 1px solid #d0d7de; padding-bottom: 0.3em; }
-        h2 { font-size: 1.5em; border-bottom: 1px solid #d0d7de; padding-bottom: 0.3em; }
-        h3 { font-size: 1.25em; }
-        h4 { font-size: 1em; }
-        h5 { font-size: 0.875em; }
-        h6 { font-size: 0.85em; color: #656d76; }
-        
-        p { margin-top: 0; margin-bottom: 16px; orphans: 3; widows: 3; }
-        
-        blockquote {
-            padding: 0 1em;
-            color: #24292f;
-            border-left: 0.25em solid #d0d7de;
-            margin: 0 0 16px 0;
-            background-color: #f6f8fa;
-            page-break-inside: avoid;
-        }
-        
-        code {
-            padding: 0.2em 0.4em;
-            margin: 0;
-            font-size: 85%;
-            color: #24292f;
-            background-color: #f6f8fa;
-            border-radius: 6px;
-            font-family: ui-monospace, SFMono-Regular, 'SF Mono', Consolas, 'Liberation Mono', Menlo, monospace;
-        }
-        
-        pre {
-            padding: 16px;
-            overflow: auto;
-            font-size: 85%;
-            line-height: 1.45;
-            color: #24292f;
-            background-color: #f6f8fa;
-            border-radius: 6px;
-            margin-bottom: 16px;
-            border: 1px solid #d0d7de;
-            page-break-inside: avoid;
-        }
-        
-        pre code {
-            background-color: transparent;
-            border: 0;
-            padding: 0;
-            margin: 0;
-            font-size: 100%;
-        }
-        
-        ul, ol { padding-left: 2em; margin-top: 0; margin-bottom: 16px; }
-        li { margin-top: 0.25em; }
-        
-        table {
-            border-spacing: 0;
-            border-collapse: collapse;
-            margin-top: 0;
-            margin-bottom: 16px;
-            page-break-inside: avoid;
-        }
-        
-        table th, table td {
-            padding: 6px 13px;
-            border: 1px solid #d0d7de;
-        }
-        
-        table th {
-            font-weight: 600;
-            background-color: #f6f8fa;
-        }
-        
-        strong { font-weight: 600; }
-        em { font-style: italic; }
-        
-        a {
-            color: #0969da;
-            text-decoration: none;
-        }
-        
-        a:hover {
-            text-decoration: underline;
-        }
-        
-        hr {
-            height: 0.25em;
-            padding: 0;
-            margin: 24px 0;
-            background-color: #d0d7de;
-            border: 0;
-        }
-        
-        img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 6px;
-            margin: 8px 0;
-            page-break-inside: avoid;
-        }
-        
-        @media print {
-            body {
-                font-size: 12pt;
-                line-height: 1.4;
-                padding: 20px;
-            }
-            
-            h1 { font-size: 18pt; }
-            h2 { font-size: 16pt; }
-            h3 { font-size: 14pt; }
-            h4 { font-size: 13pt; }
-            h5 { font-size: 12pt; }
-            h6 { font-size: 11pt; }
-        }
-    </style>
-</head>
-<body>
-    ${htmlContent}
-    <script>
-        // Auto-print when page loads
-        window.onload = function() {
-            setTimeout(() => {
-                window.print();
-            }, 1000);
-        };
-    </script>
-</body>
-</html>`;
 }
 
 export function deactivate() {

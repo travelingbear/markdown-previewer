@@ -2,12 +2,37 @@
 
 All notable changes to the Markdown Previewer extension will be documented in this file.
 
-## [1.3.0] - 2024-12-19
+## [1.3.1] - 2024-12-19
 
-### 🔧 Maintenance
-- **Version Update**: Bumped version to 1.3.0 for marketplace release
-- **Package Optimization**: Prepared for VSCode Marketplace publication
-- **Documentation Updates**: Updated version references across all files
+### ✨ New Features
+- **Print Functionality**: Added browser-based print support for markdown documents
+  - Right-click in preview → "Print" to open print-optimized page in browser
+  - Command Palette: "Markdown Previewer: Print" command available
+  - Print page opens automatically in default browser with print dialog
+  - Optimized print styling with proper page breaks and typography
+  - Color printing support with syntax highlighting preserved
+  - Temporary file cleanup after 30 seconds
+
+### 🎨 Print Styling
+- **Print-Optimized Layout**: Clean, professional print formatting
+  - Proper page break handling for headings and code blocks
+  - Print-specific font sizes (12pt body, scaled headings)
+  - Optimized margins and spacing for paper output
+  - Color preservation with `color-adjust: exact` for syntax highlighting
+  - Integrated highlight.js CSS for colorful code blocks in print
+
+### 🔧 Bug Fixes
+- **Copy Button Restoration**: Fixed copy buttons that were broken in v1.3.0
+  - Copy buttons now appear correctly on code blocks
+  - Restored hover functionality and visual feedback
+  - Fixed CSS conflicts that were hiding copy buttons
+  - Maintained backward compatibility with existing functionality
+
+### 📝 Technical Improvements
+- Clean implementation starting from working v1.2.0 base
+- Minimal print functionality addition without breaking existing features
+- Proper command registration and webview message handling
+- Enhanced package.json with print command and context menu integration
 
 ## [1.2.0] - 2024-12-19
 
@@ -18,12 +43,6 @@ All notable changes to the Markdown Previewer extension will be documented in th
   - Button shows "Copied!" confirmation for 2 seconds
   - Theme-aware styling that adapts to light/dark modes
   - Works with all programming languages and code blocks
-- **Print Support**: Added browser-based printing functionality
-  - Right-click in preview → "Print Preview" to open formatted document in browser
-  - Auto-triggers print dialog for seamless printing experience
-  - Professional print formatting with optimized typography and layout
-  - Cross-platform support (macOS, Windows, Linux)
-  - Bypasses VSCode webview print restrictions
 
 ### 🎨 User Experience Improvements
 - **Enhanced Code Block Interaction**: Improved usability for developers
@@ -35,7 +54,6 @@ All notable changes to the Markdown Previewer extension will be documented in th
 - **Modern Clipboard API**: Uses navigator.clipboard.writeText() for reliable copying
 - **Dynamic DOM Manipulation**: Automatically wraps code blocks with copy functionality
 - **Cross-browser Compatibility**: Works in all modern browsers within VSCode webview
-- **Browser Print Integration**: Creates temporary HTML files and opens in default browser for printing
 
 ## [1.1.6] - 2024-12-19
 
