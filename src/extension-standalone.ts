@@ -340,12 +340,13 @@ function convertMarkdownToHtml(markdown: string): { html: string; lineMap: numbe
             </div>`;
         });
         
-        // Convert local image paths to webview URIs for GIF support
+        // Convert local image paths to webview URIs
         if (currentPanel && currentDocument) {
-            const documentDir = vscode.Uri.file(currentDocument.uri.fsPath).with({ path: currentDocument.uri.path.substring(0, currentDocument.uri.path.lastIndexOf('/')) });
+            const documentDir = vscode.Uri.file(currentDocument.uri.fsPath.substring(0, currentDocument.uri.fsPath.lastIndexOf('/')));
             html = html.replace(/src="(?!https?:\/\/)([^"]+\.(gif|png|jpg|jpeg|svg|webp))"/gi, (match: string, imagePath: string) => {
                 try {
-                    const imageUri = vscode.Uri.joinPath(documentDir, imagePath);
+                    const cleanPath = imagePath.startsWith('./') ? imagePath.substring(2) : imagePath;
+                    const imageUri = vscode.Uri.joinPath(documentDir, cleanPath);
                     const webviewUri = currentPanel!.webview.asWebviewUri(imageUri);
                     return `src="${webviewUri.toString()}"`;
                 } catch (e) {
@@ -390,7 +391,7 @@ function getWebviewContent(htmlContent: string, lineMap: number[]): string {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Markdown Preview</title>
-    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@9.4.3/dist/mermaid.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/${currentTheme === 'dark' ? 'github-dark' : 'github'}.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
     <style>
@@ -534,18 +535,11 @@ function getWebviewContent(htmlContent: string, lineMap: number[]): string {
             container.appendChild(copyButton);
         });
         
-        // Initialize Mermaid with better config
+        // Initialize Mermaid
         mermaid.initialize({ 
             startOnLoad: true,
             theme: '${currentTheme === 'dark' ? 'dark' : 'default'}',
             flowchart: {
-                useMaxWidth: true,
-                htmlLabels: true
-            },
-            sequence: {
-                useMaxWidth: true
-            },
-            gantt: {
                 useMaxWidth: true
             }
         });
