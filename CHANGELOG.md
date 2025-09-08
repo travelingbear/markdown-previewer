@@ -2,6 +2,38 @@
 
 All notable changes to the Markdown Previewer extension will be documented in this file.
 
+## [1.3.1] - 2024-12-19
+
+### ✨ New Features
+- **Print Functionality**: Added browser-based print support for markdown documents
+  - Right-click in preview → "Print" to open print-optimized page in browser
+  - Command Palette: "Markdown Previewer: Print" command available
+  - Print page opens automatically in default browser with print dialog
+  - Optimized print styling with proper page breaks and typography
+  - Color printing support with syntax highlighting preserved
+  - Temporary file cleanup after 30 seconds
+
+### 🎨 Print Styling
+- **Print-Optimized Layout**: Clean, professional print formatting
+  - Proper page break handling for headings and code blocks
+  - Print-specific font sizes (12pt body, scaled headings)
+  - Optimized margins and spacing for paper output
+  - Color preservation with `color-adjust: exact` for syntax highlighting
+  - Integrated highlight.js CSS for colorful code blocks in print
+
+### 🔧 Bug Fixes
+- **Copy Button Restoration**: Fixed copy buttons that were broken in v1.3.0
+  - Copy buttons now appear correctly on code blocks
+  - Restored hover functionality and visual feedback
+  - Fixed CSS conflicts that were hiding copy buttons
+  - Maintained backward compatibility with existing functionality
+
+### 📝 Technical Improvements
+- Clean implementation starting from working v1.2.0 base
+- Minimal print functionality addition without breaking existing features
+- Proper command registration and webview message handling
+- Enhanced package.json with print command and context menu integration
+
 ## [1.2.0] - 2024-12-19
 
 ### ✨ New Features

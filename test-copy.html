@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Copy Button Test</title>
+</head>
+<body>
+    <pre style="position:relative;background:#f6f8fa;padding:16px;border:1px solid #ddd;">
+        <code>console.log('test code');</code>
+        <button onclick="copyCode(this)" style="position:absolute;top:8px;right:8px;background:#0969da;color:white;border:none;padding:4px 8px;border-radius:4px;cursor:pointer;">Copy</button>
+    </pre>
+
+    <script>
+        function copyCode(btn) {
+            const pre = btn.parentElement;
+            const code = pre.querySelector('code').textContent;
+            navigator.clipboard.writeText(code).then(() => {
+                btn.textContent = 'Copied!';
+                setTimeout(() => btn.textContent = 'Copy', 2000);
+            });
+        }
+    </script>
+</body>
+</html>

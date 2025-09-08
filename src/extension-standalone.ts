@@ -76,6 +76,43 @@ export function activate(context: vscode.ExtensionContext) {
         vscode.window.showInformationMessage(`Markdown Preview theme switched to ${currentTheme} mode`);
     });
 
+    const printCommand = vscode.commands.registerCommand('markdownPreviewer.print', async () => {
+        if (!currentPanel || !currentDocument) {
+            vscode.window.showErrorMessage('No markdown preview is currently open');
+            return;
+        }
+        
+        try {
+            const markdownContent = currentDocument.getText();
+            const { html: htmlContent } = convertMarkdownToHtml(markdownContent);
+            const printHtml = getPrintableHtml(htmlContent);
+            
+            const os = require('os');
+            const path = require('path');
+            const fs = require('fs');
+            
+            const tempDir = os.tmpdir();
+            const fileName = `markdown-print-${Date.now()}.html`;
+            const tempFilePath = path.join(tempDir, fileName);
+            
+            fs.writeFileSync(tempFilePath, printHtml);
+            
+            const fileUri = vscode.Uri.file(tempFilePath);
+            await vscode.env.openExternal(fileUri);
+            
+            vscode.window.showInformationMessage('Print page opened in browser. You can now print using Cmd+P or Ctrl+P.');
+            
+            setTimeout(() => {
+                try {
+                    fs.unlinkSync(tempFilePath);
+                } catch (e) {}
+            }, 30000);
+            
+        } catch (error) {
+            vscode.window.showErrorMessage(`Failed to create print page: ${error instanceof Error ? error.message : 'Unknown error'}`);
+        }
+    });
+
     const toggleModeCommand = vscode.commands.registerCommand('markdownPreviewer.toggleMode', () => {
         let markdownDocument: vscode.TextDocument | undefined;
         
@@ -138,6 +175,7 @@ export function activate(context: vscode.ExtensionContext) {
         openPreviewCommand, 
         toggleThemeCommand, 
         toggleModeCommand,
+        printCommand,
         editorChangeListener,
         statusBarItem
     );
@@ -165,7 +203,7 @@ function openPreview(document: vscode.TextDocument) {
         }
     );
 
-    // Handle messages from webview (checkbox updates, scroll sync, save, and toggle mode)
+    // Handle messages from webview (checkbox updates, scroll sync, save, toggle mode, and print)
     currentPanel.webview.onDidReceiveMessage(
         message => {
             if (message.type === 'checkboxToggle' && currentDocument) {
@@ -177,6 +215,8 @@ function openPreview(document: vscode.TextDocument) {
                 vscode.workspace.saveAll();
             } else if (message.type === 'toggleMode') {
                 vscode.commands.executeCommand('markdownPreviewer.toggleMode');
+            } else if (message.type === 'print') {
+                vscode.commands.executeCommand('markdownPreviewer.print');
             }
         }
     );
@@ -507,6 +547,163 @@ function getWebviewContent(htmlContent: string, lineMap: number[]): string {
                 }
             }
         });
+    </script>
+</body>
+</html>`;
+}
+
+function getPrintableHtml(htmlContent: string): string {
+    return `<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Markdown Print Preview</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif;
+            font-size: 16px;
+            line-height: 1.5;
+            color: #24292f;
+            background-color: #ffffff;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 32px;
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            margin-top: 24px;
+            margin-bottom: 16px;
+            font-weight: 600;
+            line-height: 1.25;
+            page-break-after: avoid;
+        }
+        
+        h1 { font-size: 2em; border-bottom: 1px solid #d0d7de; padding-bottom: 0.3em; }
+        h2 { font-size: 1.5em; border-bottom: 1px solid #d0d7de; padding-bottom: 0.3em; }
+        h3 { font-size: 1.25em; }
+        h4 { font-size: 1em; }
+        h5 { font-size: 0.875em; }
+        h6 { font-size: 0.85em; color: #656d76; }
+        
+        p { margin-top: 0; margin-bottom: 16px; orphans: 3; widows: 3; }
+        
+        blockquote {
+            padding: 0 1em;
+            color: #24292f;
+            border-left: 0.25em solid #d0d7de;
+            margin: 0 0 16px 0;
+            background-color: #f6f8fa;
+            page-break-inside: avoid;
+        }
+        
+        code {
+            padding: 0.2em 0.4em;
+            margin: 0;
+            font-size: 85%;
+            color: #24292f;
+            background-color: #f6f8fa;
+            border-radius: 6px;
+            font-family: ui-monospace, SFMono-Regular, 'SF Mono', Consolas, 'Liberation Mono', Menlo, monospace;
+        }
+        
+        pre {
+            padding: 16px;
+            overflow: auto;
+            font-size: 85%;
+            line-height: 1.45;
+            color: #24292f;
+            background-color: #f6f8fa;
+            border-radius: 6px;
+            margin-bottom: 16px;
+            border: 1px solid #d0d7de;
+            page-break-inside: avoid;
+        }
+        
+        pre code {
+            background-color: transparent;
+            border: 0;
+            padding: 0;
+            margin: 0;
+            font-size: 100%;
+        }
+        
+        ul, ol { padding-left: 2em; margin-top: 0; margin-bottom: 16px; }
+        li { margin-top: 0.25em; }
+        
+        table {
+            border-spacing: 0;
+            border-collapse: collapse;
+            margin-top: 0;
+            margin-bottom: 16px;
+            page-break-inside: avoid;
+        }
+        
+        table th, table td {
+            padding: 6px 13px;
+            border: 1px solid #d0d7de;
+        }
+        
+        table th {
+            font-weight: 600;
+            background-color: #f6f8fa;
+        }
+        
+        strong { font-weight: 600; }
+        em { font-style: italic; }
+        
+        a {
+            color: #0969da;
+            text-decoration: none;
+        }
+        
+        a:hover {
+            text-decoration: underline;
+        }
+        
+        hr {
+            height: 0.25em;
+            padding: 0;
+            margin: 24px 0;
+            background-color: #d0d7de;
+            border: 0;
+        }
+        
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 6px;
+            margin: 8px 0;
+            page-break-inside: avoid;
+        }
+        
+        @media print {
+            body {
+                font-size: 12pt;
+                line-height: 1.4;
+                padding: 20px;
+                -webkit-print-color-adjust: exact;
+                color-adjust: exact;
+            }
+            
+            h1 { font-size: 18pt; }
+            h2 { font-size: 16pt; }
+            h3 { font-size: 14pt; }
+            h4 { font-size: 13pt; }
+            h5 { font-size: 12pt; }
+            h6 { font-size: 11pt; }
+        }
+    </style>
+</head>
+<body>
+    ${htmlContent}
+    <script>
+        window.onload = function() {
+            setTimeout(() => {
+                window.print();
+            }, 1000);
+        };
     </script>
 </body>
 </html>`;

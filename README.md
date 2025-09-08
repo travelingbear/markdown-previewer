@@ -4,7 +4,7 @@ A VSCode extension that provides enhanced markdown preview functionality with Gi
 
 ![vscode](vscode_extension.gif)
 
-**Latest Update**: Version 1.2.0 adds one-click copy buttons to all code blocks for enhanced developer productivity.
+**Latest Update**: Version 1.3.1 adds browser-based print functionality while maintaining all copy button features from v1.2.0.
 
 ## ✨ Features
 
@@ -16,6 +16,7 @@ A VSCode extension that provides enhanced markdown preview functionality with Gi
 
 ### ✅ **Interactive Elements**
 - **Copy Code Buttons**: One-click copy functionality on all code blocks with visual feedback
+- **Print Support**: Browser-based printing with color syntax highlighting and optimized layout
 - **Live Checkboxes**: Click checkboxes in preview to update source markdown automatically
 - **Save from Preview**: Press Ctrl+S (Cmd+S on Mac) to save directly from preview mode
 - **Mermaid.js Diagrams**: Full support for flowcharts, sequence diagrams, and more
@@ -39,6 +40,7 @@ A VSCode extension that provides enhanced markdown preview functionality with Gi
 - **Right-click in Preview**:
   - Toggle Mode (Preview ↔ Code)
   - Toggle Theme (Light/Dark)
+  - Print Document
 - **Right-click in Markdown Editor**:
   - Toggle Mode (Preview ↔ Code)
   - Open Preview
@@ -49,6 +51,7 @@ A VSCode extension that provides enhanced markdown preview functionality with Gi
   - "Markdown Previewer: Open Preview"
   - "Markdown Previewer: Toggle Mode (Preview ↔ Code)"
   - "Markdown Previewer: Toggle Theme (Light/Dark)"
+  - "Markdown Previewer: Print"
 
 ## 🛠️ Installation & Usage
 
