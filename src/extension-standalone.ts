@@ -430,8 +430,8 @@ function getWebviewContent(htmlContent: string, lineMap: number[]): string {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Markdown Preview</title>
     <script src="https://cdn.jsdelivr.net/npm/mermaid@9.4.3/dist/mermaid.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/${currentTheme === 'dark' ? 'github-dark' : 'github'}.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
     <style>
@@ -539,6 +539,84 @@ function getWebviewContent(htmlContent: string, lineMap: number[]): string {
             outline: none;
             border-color: ${currentTheme === 'dark' ? '#bd93f9' : '#0969da'};
             box-shadow: 0 0 0 2px ${currentTheme === 'dark' ? 'rgba(189, 147, 249, 0.3)' : 'rgba(9, 105, 218, 0.3)'};
+        }
+        
+        .katex {
+            vertical-align: baseline !important;
+            margin: 0.3em 0.1em !important;
+            padding: 0.2em 0 !important;
+        }
+        
+        .katex .frac {
+            vertical-align: middle !important;
+            margin: 0.8em 0 !important;
+        }
+        
+        .katex .frac .frac-line {
+            margin: 0.4em 0 !important;
+        }
+        
+        .katex .frac .vlist-t {
+            line-height: 2 !important;
+        }
+        
+        .katex-display {
+            margin: 1.5em 0 !important;
+            overflow-x: auto;
+            text-align: center;
+            min-height: 4em;
+            padding: 0.5em 0;
+        }
+        
+        p:has(.katex) {
+            line-height: 3.5;
+            min-height: 4em;
+            margin: 1em 0;
+        }
+        
+        .katex .base {
+            display: inline-block;
+            min-height: 2.5em;
+        }
+        
+        .katex-display {
+            margin: 1em 0 !important;
+            overflow-x: auto;
+            text-align: center;
+        }
+        
+        .katex .delimsizing, .katex .delim-size1, .katex .delim-size2, .katex .delim-size3, .katex .delim-size4 {
+            vertical-align: middle !important;
+        }
+        
+        .katex .pstrut {
+            position: relative !important;
+        }
+        
+        .katex .mord, .katex .mop, .katex .mbin, .katex .mrel {
+            vertical-align: baseline !important;
+        }
+        
+        .katex .vlist-t {
+            display: inline-table !important;
+            vertical-align: baseline !important;
+        }
+        
+        .katex .vlist-r {
+            display: table-row !important;
+        }
+        
+        .katex .vlist {
+            display: table-cell !important;
+            vertical-align: baseline !important;
+        }
+        
+        .katex .arraycolsep {
+            width: 0.5em !important;
+        }
+        
+        .katex .frac-line {
+            border-bottom-width: 0.04em !important;
         }
     </style>
 </head>
