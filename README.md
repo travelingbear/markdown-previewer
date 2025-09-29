@@ -4,7 +4,7 @@ A VSCode extension that provides enhanced markdown preview functionality with Gi
 
 ![vscode](vscode_extension.gif)
 
-**Latest Update**: Version 1.4.1 fixes local image rendering and mermaid diagram compatibility, plus adds interactive text input fields using `Label = ___` syntax.
+**Latest Update**: Version 1.5.0 fixes scroll synchronization between code and preview modes, ensuring accurate section-level alignment when switching modes or scrolling.
 
 ## ✨ Features
 
@@ -22,7 +22,7 @@ A VSCode extension that provides enhanced markdown preview functionality with Gi
 - **Save from Preview**: Press Ctrl+S (Cmd+S on Mac) to save directly from preview mode
 - **Mermaid.js Diagrams**: Full support for flowcharts, sequence diagrams, and more
 - **GIF Support**: Full animated GIF rendering for both local and remote images
-- **Position Sync**: Bidirectional scroll synchronization between preview and code editor
+- **Enhanced Scroll Sync**: Accurate bidirectional scroll synchronization with section-level precision between preview and code editor
 - **Smart Mode Switching**: Preview closure automatically switches to code-first mode
 
 ### 🎨 **Beautiful Themes**
