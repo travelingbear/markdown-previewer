@@ -4,7 +4,7 @@ A VSCode extension that provides enhanced markdown preview functionality with Gi
 
 ![vscode](vscode_extension.gif)
 
-**Latest Update**: Version 1.5.0 fixes scroll synchronization between code and preview modes, ensuring accurate section-level alignment when switching modes or scrolling.
+**Latest Update**: Version 1.5.1 fixes preview title updates, file tree navigation, and double-click file opening in preview mode.
 
 ## ✨ Features
 

@@ -2,6 +2,13 @@
 
 All notable changes to the Markdown Previewer extension will be documented in this file.
 
+## [1.5.1] - 2024-12-19
+
+### Fixed
+- **Preview Title**: Fixed preview panel title not updating when switching between markdown files
+- **File Tree Navigation**: Fixed clicking markdown files in folder tree to focus preview tab instead of code tab in preview-first mode
+- **Double-Click File Opening**: Fixed double-clicked files not rendering in preview mode
+
 ## [1.5.0] - 2024-12-19
 
 ### Added
