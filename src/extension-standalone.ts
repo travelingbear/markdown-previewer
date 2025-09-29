@@ -41,6 +41,13 @@ export function activate(context: vscode.ExtensionContext) {
             statusBarItem.show();
             const modeText = currentMode === 'preview-first' ? 'Preview First' : 'Code First';
             vscode.window.setStatusBarMessage(`📝 Markdown Mode: ${modeText}`, 3000);
+            
+            // Update preview if it's open and document changed
+            if (currentPanel && currentDocument !== editor.document) {
+                currentDocument = editor.document;
+                currentPanel.title = `Preview: ${editor.document.uri.path.split('/').pop()}`;
+                updatePreviewContent(currentPanel, editor.document);
+            }
         } else if (!currentPanel) {
             // Only hide if no preview is open
             statusBarItem.hide();
@@ -61,6 +68,20 @@ export function activate(context: vscode.ExtensionContext) {
             setTimeout(() => {
                 openPreview(document);
             }, 200);
+        }
+    });
+    
+    // Handle double-click file opening
+    const textDocumentChangeListener = vscode.window.onDidChangeActiveTextEditor(editor => {
+        if (editor?.document.languageId === 'markdown' && currentMode === 'preview-first') {
+            if (!currentPanel) {
+                setTimeout(() => {
+                    openPreview(editor.document);
+                }, 100);
+            } else if (currentPanel && currentDocument !== editor.document) {
+                // Focus existing preview tab instead of code tab
+                currentPanel.reveal();
+            }
         }
     });
 
@@ -199,6 +220,7 @@ export function activate(context: vscode.ExtensionContext) {
         printCommand,
         editorChangeListener,
         documentOpenListener,
+        textDocumentChangeListener,
         documentChangeListener,
         statusBarItem
     );
