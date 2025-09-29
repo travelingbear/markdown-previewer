@@ -322,6 +322,8 @@ function convertMarkdownToHtml(markdown: string): { html: string; lineMap: numbe
             console.warn('Failed to load markdown-it-task-lists:', e);
         }
         
+
+        
         try {
             const mermaid = require('markdown-it-mermaid');
             if (mermaid) {
@@ -348,6 +350,12 @@ function convertMarkdownToHtml(markdown: string): { html: string; lineMap: numbe
         }
         
         let html = md.render(markdown);
+        
+        // Manually add IDs to headings
+        html = html.replace(/<h([1-6])>([^<]+)<\/h[1-6]>/g, (match: string, level: string, text: string) => {
+            const id = text.toLowerCase().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '');
+            return `<h${level} id="${id}">${text}</h${level}>`;
+        });
         
         // Convert text input syntax to HTML inputs
         html = html.replace(/([\w\s]+)\s*=\s*___+/g, (match: string, label: string) => {
@@ -637,6 +645,44 @@ function getWebviewContent(htmlContent: string, lineMap: number[]): string {
             } else if (e.altKey && e.key === 'm') {
                 e.preventDefault();
                 vscode.postMessage({ type: 'toggleMode' });
+            }
+        });
+        
+        // Handle anchor link clicks
+        document.addEventListener('click', function(e) {
+            if (e.target && e.target.tagName === 'A') {
+                const href = e.target.getAttribute('href');
+                if (href && href.startsWith('#')) {
+                    e.preventDefault();
+                    const targetId = href.substring(1);
+                    
+                    // First try to find by ID
+                    let targetElement = document.getElementById(targetId);
+                    
+                    // If not found, search all headings and match text
+                    if (!targetElement) {
+                        const headings = document.querySelectorAll('h1, h2, h3, h4, h5, h6');
+                        for (const heading of headings) {
+                            const headingText = heading.textContent || '';
+                            const slugified = headingText.toLowerCase()
+                                .replace(/[^\w\s-]/g, '')
+                                .replace(/\s+/g, '-')
+                                .replace(/-+/g, '-')
+                                .replace(/^-|-$/g, '');
+                            
+
+                            
+                            if (slugified === targetId) {
+                                targetElement = heading;
+                                break;
+                            }
+                        }
+                    }
+                    
+                    if (targetElement) {
+                        targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                }
             }
         });
         

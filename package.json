@@ -25,13 +25,9 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/francisco-fernandes/markdown-previewer.git"
-  },
-  "license": "MIT",
-  "repository": {
-    "type": "git",
     "url": "https://github.com/travelingbear/markdown-previewer.git"
   },
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/travelingbear/markdown-previewer/issues"
   },
@@ -166,6 +162,7 @@
   "dependencies": {
     "highlight.js": "^11.7.0",
     "markdown-it": "^13.0.1",
+    "markdown-it-anchor": "^9.2.0",
     "markdown-it-mermaid": "^0.2.5",
     "markdown-it-task-lists": "^2.1.1"
   }
