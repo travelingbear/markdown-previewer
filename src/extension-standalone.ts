@@ -325,6 +325,15 @@ function convertMarkdownToHtml(markdown: string): { html: string; lineMap: numbe
 
         
         try {
+            const katex = require('markdown-it-katex');
+            if (katex && typeof katex === 'function') {
+                md.use(katex);
+            }
+        } catch (e) {
+            console.warn('Failed to load markdown-it-katex:', e);
+        }
+        
+        try {
             const mermaid = require('markdown-it-mermaid');
             if (mermaid) {
                 // Try different export patterns
@@ -421,6 +430,8 @@ function getWebviewContent(htmlContent: string, lineMap: number[]): string {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Markdown Preview</title>
     <script src="https://cdn.jsdelivr.net/npm/mermaid@9.4.3/dist/mermaid.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/${currentTheme === 'dark' ? 'github-dark' : 'github'}.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
     <style>
