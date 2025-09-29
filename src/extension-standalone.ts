@@ -7,6 +7,8 @@ let currentTheme: 'light' | 'dark' = 'light';
 let statusBarItem: vscode.StatusBarItem;
 let scrollSyncEnabled = true;
 let editorScrollListener: vscode.Disposable | undefined;
+let fileWatcher: vscode.Disposable | undefined;
+let documentChangeListener: vscode.Disposable | undefined;
 let lastEditorLine = 0;
 let lastPreviewLine = 0;
 let isModeSwitching = false;
@@ -171,12 +173,20 @@ export function activate(context: vscode.ExtensionContext) {
         vscode.window.showInformationMessage(`Markdown Previewer mode: ${modeText}`);
     });
 
+    // Setup document change listener
+    documentChangeListener = vscode.workspace.onDidChangeTextDocument(e => {
+        if (e.document === currentDocument && currentPanel) {
+            updatePreviewContent(currentPanel, e.document);
+        }
+    });
+
     context.subscriptions.push(
         openPreviewCommand, 
         toggleThemeCommand, 
         toggleModeCommand,
         printCommand,
         editorChangeListener,
+        documentChangeListener,
         statusBarItem
     );
     
@@ -241,6 +251,10 @@ function openPreview(document: vscode.TextDocument) {
             editorScrollListener.dispose();
             editorScrollListener = undefined;
         }
+        if (fileWatcher) {
+            fileWatcher.dispose();
+            fileWatcher = undefined;
+        }
         
         // Ensure status bar stays visible if markdown file is still active
         const activeEditor = vscode.window.activeTextEditor;
@@ -251,6 +265,9 @@ function openPreview(document: vscode.TextDocument) {
 
     currentDocument = document;
     updatePreviewContent(currentPanel, document);
+    
+    // Setup file watcher for auto-update
+    setupFileWatcher(document);
     
     // Ensure status bar stays visible when preview opens
     statusBarItem.show();
@@ -1149,6 +1166,27 @@ function syncPreviewToEditor(line: number) {
     }
 }
 
+function setupFileWatcher(document: vscode.TextDocument) {
+    if (fileWatcher) {
+        fileWatcher.dispose();
+    }
+    
+    const watcher = vscode.workspace.createFileSystemWatcher(document.uri.fsPath);
+    
+    watcher.onDidChange(() => {
+        if (currentPanel && currentDocument) {
+            vscode.workspace.openTextDocument(document.uri).then(updatedDoc => {
+                currentDocument = updatedDoc;
+                updatePreviewContent(currentPanel!, updatedDoc);
+            });
+        }
+    });
+    
+    fileWatcher = watcher;
+}
+
+
+
 export function deactivate() {
     if (currentPanel) {
         currentPanel.dispose();
@@ -1158,5 +1196,11 @@ export function deactivate() {
     }
     if (editorScrollListener) {
         editorScrollListener.dispose();
+    }
+    if (fileWatcher) {
+        fileWatcher.dispose();
+    }
+    if (documentChangeListener) {
+        documentChangeListener.dispose();
     }
 }
