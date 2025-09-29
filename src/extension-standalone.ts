@@ -34,18 +34,12 @@ export function activate(context: vscode.ExtensionContext) {
         currentTheme = savedTheme;
     }
     
-    // Auto-preview handler
+    // Auto-preview handler - only for newly opened files
     const handleFileOpening = (editor: vscode.TextEditor | undefined) => {
         if (editor?.document.languageId === 'markdown') {
             statusBarItem.show();
             const modeText = currentMode === 'preview-first' ? 'Preview First' : 'Code First';
             vscode.window.setStatusBarMessage(`📝 Markdown Mode: ${modeText}`, 3000);
-            
-            if (currentMode === 'preview-first') {
-                setTimeout(() => {
-                    openPreview(editor.document);
-                }, 200);
-            }
         } else if (!currentPanel) {
             // Only hide if no preview is open
             statusBarItem.hide();
@@ -59,6 +53,15 @@ export function activate(context: vscode.ExtensionContext) {
     }
     handleFileOpening(activeEditor);
     const editorChangeListener = vscode.window.onDidChangeActiveTextEditor(handleFileOpening);
+    
+    // Auto-preview for newly opened files only
+    const documentOpenListener = vscode.workspace.onDidOpenTextDocument(document => {
+        if (document.languageId === 'markdown' && currentMode === 'preview-first') {
+            setTimeout(() => {
+                openPreview(document);
+            }, 200);
+        }
+    });
 
     const openPreviewCommand = vscode.commands.registerCommand('markdownPreviewer.openPreview', () => {
         const activeEditor = vscode.window.activeTextEditor;
@@ -186,6 +189,7 @@ export function activate(context: vscode.ExtensionContext) {
         toggleModeCommand,
         printCommand,
         editorChangeListener,
+        documentOpenListener,
         documentChangeListener,
         statusBarItem
     );
