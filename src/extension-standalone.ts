@@ -12,6 +12,7 @@ let documentChangeListener: vscode.Disposable | undefined;
 let lastEditorLine = 0;
 let lastPreviewLine = 0;
 let isModeSwitching = false;
+let documentScrollPositions = new Map<string, number>();
 
 export function activate(context: vscode.ExtensionContext) {
     console.log('Markdown Previewer extension is activating...');
@@ -150,6 +151,15 @@ export function activate(context: vscode.ExtensionContext) {
                 lastEditorLine = activeEditor.visibleRanges[0]?.start.line || 0;
             }
             openPreview(markdownDocument);
+            // Restore preview position after opening
+            setTimeout(() => {
+                if (currentPanel && lastEditorLine > 0) {
+                    currentPanel.webview.postMessage({
+                        type: 'scrollToLine',
+                        line: lastEditorLine
+                    });
+                }
+            }, 300);
         } else {
             // Store current preview position before switching
             if (currentPanel) {
@@ -161,9 +171,8 @@ export function activate(context: vscode.ExtensionContext) {
                 preserveFocus: false
             }).then(editor => {
                 // Restore editor position
-                if (lastPreviewLine > 0 || lastEditorLine > 0) {
-                    const line = Math.max(lastPreviewLine, lastEditorLine);
-                    const position = new vscode.Position(line, 0);
+                if (lastPreviewLine > 0) {
+                    const position = new vscode.Position(lastPreviewLine, 0);
                     const range = new vscode.Range(position, position);
                     editor.revealRange(range, vscode.TextEditorRevealType.AtTop);
                 }
@@ -199,6 +208,12 @@ export function activate(context: vscode.ExtensionContext) {
 }
 
 function openPreview(document: vscode.TextDocument) {
+    // Store current editor position
+    const activeEditor = vscode.window.activeTextEditor;
+    if (activeEditor && activeEditor.document === document) {
+        lastEditorLine = activeEditor.visibleRanges[0]?.start.line || 0;
+    }
+    
     if (currentPanel) {
         currentPanel.reveal();
         currentDocument = document;
@@ -704,7 +719,6 @@ function getWebviewContent(htmlContent: string, lineMap: number[]): string {
         document.addEventListener('scroll', function() {
             clearTimeout(scrollTimeout);
             scrollTimeout = setTimeout(() => {
-                const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
                 const elements = document.querySelectorAll('h1, h2, h3, h4, h5, h6, p, ul, ol, blockquote, pre, li');
                 const lineMap = ${JSON.stringify(lineMap)};
                 
@@ -714,7 +728,7 @@ function getWebviewContent(htmlContent: string, lineMap: number[]): string {
                     const rect = element.getBoundingClientRect();
                     
                     if (rect.top >= -50) {
-                        targetLine = lineMap[Math.min(i, lineMap.length - 1)] || i;
+                        targetLine = lineMap[i] || i;
                         break;
                     }
                 }
